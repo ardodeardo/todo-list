@@ -1,18 +1,26 @@
 import { createGlobalStyle } from "styled-components";
+import { normalize } from 'styled-normalize';
+import { reset } from 'styled-reset';
 
 const GlobalStyle = createGlobalStyle`
-    body {
-        margin: 0;
-        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-            'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-            sans-serif;
+    @import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;700&display=swap');
+    /* ${ normalize } */
+    ${ reset }
+
+    :root {
+        font-family: 'Nunito Sans', sans-serif;
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
     }
 
-    code {
-        font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-        monospace;
+    * {
+        box-sizing: border-box;
+    }
+
+    button {
+        &:hover {
+            cursor: pointer;
+        }
     }
 `
 
