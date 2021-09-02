@@ -8,19 +8,12 @@ const ListContainer = styled.div`
     overflow-y: auto;
 `
 
-const OngoingList = styled.div`
-
-`
-
-const ArchiveList = styled.div`
-
-`
-
 const ArchiveTitle = styled.h2`
     position: relative;
     font-size: 16px;
     color: ${ colorPallete.dark_blue };
     font-weight: bold;
+    margin-top: 28px;
     margin-bottom: 34px;
 
     ::after {
@@ -53,4 +46,4 @@ const FeedbackImage = styled.img`
     margin-bottom: 42px;
 `
 
-export { ListContainer, OngoingList, ArchiveList, ArchiveTitle, Empty, FeedbackImage }
+export { ListContainer, ArchiveTitle, Empty, FeedbackImage }

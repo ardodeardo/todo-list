@@ -68,7 +68,10 @@ export const TextArea = styled.textarea.attrs(props => ({
     placeholder: props.placeholder
 }))`
     ${ formGeneric }
-    width: 100%;
+    min-width: 100%;
+    max-width: 100%;
+    min-height: 100px;
+    max-height: 150px;
     font-family: 'Nunito Sans', sans-serif;
 `
 
@@ -87,9 +90,13 @@ export const ButtonWrapper = styled.div`
     grid-template-columns: repeat(2,1fr);
     margin-top: 59px;
 `
-export const Button = styled.button`
+export const Button = styled.button.attrs(props => ({
+    disabled: props.isDisabled
+}))`
     width: 140px;
     height: 48px;
+    opacity: ${ props => props.isDisabled ? ".7" : "1" };
+    pointer-events: ${ props => props.isDisabled ? "none" : "auto" };
     margin-left: ${ props => props.align === "right" ? "auto" : 0 };
     margin-right: ${ props => props.align === "left" ? "auto" : 0 };
     padding: 13px 0;
