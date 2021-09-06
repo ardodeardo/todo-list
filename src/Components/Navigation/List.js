@@ -1,11 +1,11 @@
 import React from 'react';
+import PropTypes from "prop-types";
 import Item from './Item';
-// import { v4 as uuidv4 } from 'uuid';
 import { 
     ListContainer,
     ArchiveTitle, Empty, FeedbackImage } from './List.styled';
 
-export default function List(props) {
+function List(props) {
 
     const emptyOrNotFoundTemplate = {
         empty: {
@@ -28,22 +28,30 @@ export default function List(props) {
         )
     }
 
+    const getListByFilter = (isComplete) => {
+        const items = props.itemList;
+
+        // check by search input
+        let getList = 
+            props.filterSearchBy.length > 2 ?
+            items.filter(obj => obj.is_complete === isComplete && obj.is_deleted === false && obj.title.toLowerCase().indexOf(props.filterSearchBy.toLowerCase()) >= 0) :
+            items.filter(obj => obj.is_complete === isComplete && obj.is_deleted === false);
+
+        // check by priority
+        getList =
+            props.filterSortBy === 3 ? 
+            getList.sort((a, b) => b.priority - a.priority || a.due_date - b.due_date) : 
+            getList.sort((a, b) => a.priority - b.priority || a.due_date - b.due_date);
+
+        return getList;
+    }
+
     const renderListItem = () => {
         const items = props.itemList;
 
         if(items.length > 0) {
-            let inProgressItems =
-            props.filterSearchBy.length > 2 ?
-                items.filter(obj => obj.is_complete !== true && obj.is_deleted === false && obj.title.toLowerCase().indexOf(props.filterSearchBy.toLowerCase()) >= 0) :
-                items.filter(obj => obj.is_complete !== true && obj.is_deleted === false)
-
-            inProgressItems = 
-                props.filterSortBy === "3" ? 
-                inProgressItems.sort((a, b) => b.priority - a.priority || a.due_date - b.due_date) : 
-                inProgressItems.sort((a, b) => a.priority - b.priority || a.due_date - b.due_date);
-            
-            let completedItems = items.filter(obj => obj.is_complete === true && obj.is_deleted === false);
-            completedItems = completedItems.sort((a, b) => a.due_date - b.due_date);
+            let inProgressItems = getListByFilter(false);
+            let completedItems = getListByFilter(true);
 
             const inProgressFound = inProgressItems.length > 0 ? true : false;
             const archiveFound = completedItems.length > 0 ? true : false;
@@ -51,12 +59,10 @@ export default function List(props) {
             let completedTemp;
 
             if(inProgressItems.length > 0) {
-
                 inProgressTemp = 
                     <>
                     {
                         inProgressItems.map(item => {
-                            
                             const dateFormat = item.due_date.toDateString();
 
                             return <Item
@@ -78,13 +84,11 @@ export default function List(props) {
             } 
 
             if(completedItems.length > 0) {
-
                 completedTemp = 
                     <>
                     <ArchiveTitle>Task Archive</ArchiveTitle>
                     {
                         completedItems.map(item => {
-                            
                             const dateFormat = item.due_date.toDateString();
 
                             return <Item
@@ -105,13 +109,13 @@ export default function List(props) {
                     </>
             }
 
+            // empty by filter or just empty
+            const isEmptyOrNotFound = props.filterSearchBy.length > 2 ? {...emptyOrNotFoundTemplate.notFound} : {...emptyOrNotFoundTemplate.empty}
+            
             if(!inProgressFound && !archiveFound) {
-                return handleEmptyOrNotFoundItem({...emptyOrNotFoundTemplate.empty});
+                return handleEmptyOrNotFoundItem(isEmptyOrNotFound);
             }
             else if(!inProgressFound){
-                console.log(props.filterSearchBy.length > 2);
-                const isEmptyOrNotFound = props.filterSearchBy.length > 2 ? {...emptyOrNotFoundTemplate.notFound} : {...emptyOrNotFoundTemplate.empty}
-
                 return [
                     handleEmptyOrNotFoundItem(isEmptyOrNotFound),
                     inProgressTemp,
@@ -134,3 +138,12 @@ export default function List(props) {
         </ListContainer>
     )
 }
+
+List.propTypes = {
+    filterSortBy: PropTypes.number,
+    filterSearchBy: PropTypes.string,
+    itemList: PropTypes.array,
+    onChangeTargetItem: PropTypes.func
+}
+
+export default List;

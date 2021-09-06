@@ -1,8 +1,9 @@
 import React from 'react';
+import PropTypes from "prop-types";
 import { AiOutlineClose } from "react-icons/ai";
 import { ItemBody, Description, CloseDetailButton } from './Body.styled';
 
-export default function Body(props) {
+function Body(props) {
 
     return (
         <ItemBody>
@@ -15,3 +16,12 @@ export default function Body(props) {
         </ItemBody>
     )
 }
+
+Body.propTypes = {
+    id: PropTypes.string,
+    description: PropTypes.string,
+    showDetail: PropTypes.bool,
+    OnHandleUpdateTargetItem: PropTypes.func
+}
+
+export default Body;

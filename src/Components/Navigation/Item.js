@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from "prop-types";
 import { AiFillCheckCircle } from "react-icons/ai";
 import { BsThreeDots } from "react-icons/bs";
 import Option from './Item/Option';
@@ -10,7 +11,7 @@ import {
     DateWrapper } from './Item.styled';
 
 
-export default function Item(props) {
+function Item(props) {
 
     const priorityLevel = [
         null,
@@ -57,7 +58,8 @@ export default function Item(props) {
                     id={ props.id }
                     description={ props.description }
                     showDetail={ props.showDetail }
-                    OnHandleUpdateTargetItem={ handleUpdateTargetItem }></Body>
+                    OnHandleUpdateTargetItem={ handleUpdateTargetItem }
+                    ></Body>
             )
         }
     }
@@ -72,7 +74,7 @@ export default function Item(props) {
                         <AiFillCheckCircle />
                     </Button>
                 </CheckListWrapper>
-                <InformationWrapper>
+                <InformationWrapper completedItem={ props.isComplete }>
                     <Title>{ props.title }</Title>
                     <DateWrapper>
                         <DateTime 
@@ -81,7 +83,9 @@ export default function Item(props) {
                             color={ priorityLevel[props.priority].color }>{ priorityLevel[props.priority].text }</PriorityType>
                     </DateWrapper>    
                 </InformationWrapper>
-                <OptionWrapper>
+                <OptionWrapper 
+                    completedItem={ props.isComplete }
+                    isShowingDetail={ props.showDetail }>
                     <OptionButton
                         onClick={ () => handleUpdateTargetItem(props.id, "show_option", props.showOption) }
                         >
@@ -94,3 +98,18 @@ export default function Item(props) {
         </ItemWrapper>
     )
 }
+
+Item.propTypes = {
+    id: PropTypes.string,
+    title: PropTypes.string,
+    priority: PropTypes.number,
+    dueDate: PropTypes.string,
+    description: PropTypes.string,
+    isComplete: PropTypes.bool,
+    showOption: PropTypes.bool,
+    showDetail: PropTypes.bool,
+    isDeleted: PropTypes.bool,
+    onChangeTargetItem: PropTypes.func
+}
+
+export default Item;

@@ -1,3 +1,4 @@
+import PropTypes from "prop-types";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { AiOutlineCaretDown, AiFillCalendar } from "react-icons/ai";
@@ -7,7 +8,7 @@ import {
     ButtonWrapper, Button } from "./Form.styled";
 
 
-export default function Form(props) {
+function Form(props) {
 
     const prefixKey = "priority";
     const priority = [
@@ -17,25 +18,23 @@ export default function Form(props) {
         ];
 
     const handleTitleChange = (e) => {
-        let title = e.target.value;
-        props.onFormChange("title", title);
+        props.onFormChange("title", e.target.value);
         e.preventDefault();
     }   
 
     const handlePriorityChange = (e) => {
-        let priority = e.target.value;
-        props.onFormChange("priority", priority);
+        props.onFormChange("priority", parseInt(e.target.value));
     }
 
     const handleDueDateChange = (date) => {
-        let dueDate = date;
-        props.onFormChange("due_date", dueDate);
+        props.onFormChange("due_date", date);
     }
 
     const handleDescriptionChange = (e) => {
-        let description = e.target.value;
-        props.onFormChange("description", description);
+        props.onFormChange("description", e.target.value);
     }
+
+
 
     const handleSubmit = (e) => {
         props.onAddItem(e);
@@ -104,3 +103,19 @@ export default function Form(props) {
         </FormContainer>
     )
 }
+
+Form.propTypes = {
+    formTitle: PropTypes.string,
+    formPriority: PropTypes.number,
+    formDueDate: PropTypes.instanceOf(Date),
+    formDescription: PropTypes.string,
+    toggleOption: PropTypes.bool,
+    toggleDetail: PropTypes.bool,
+    itemList: PropTypes.array,
+    onFormChange: PropTypes.func,
+    onResetForm: PropTypes.func,
+    onAddItem: PropTypes.func,
+    formSubmitDisabled: PropTypes.bool
+}
+
+export default Form;

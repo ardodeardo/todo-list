@@ -139,6 +139,15 @@ class App extends Component {
         const getArrayIndex = allItems.findIndex((item) => item.id === id);
         const targetItem = { ...findById[0] };
         targetItem[itemObject] = value;
+
+        if(itemObject === "show_detail" || itemObject === "is_deleted") {
+            // auto close the option card
+            targetItem.show_option = false;
+        } else if (itemObject === "is_complete") {
+            // auto close detail tray
+            targetItem.show_detail = false;
+        }
+
         allItems[getArrayIndex] = targetItem;
 
         this.setState({ items: allItems }, () => {

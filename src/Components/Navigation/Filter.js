@@ -1,10 +1,11 @@
 import React from 'react';
+import PropTypes from "prop-types";
 import { Select, Input } from "../Form.styled";
 import { FilterContainer, Form, ButtonEmptySearchInput } from './Filter.styled';
 import { AiOutlineCaretDown, AiOutlineClose } from "react-icons/ai";
 
 
-export default function Filter(props) {
+function Filter(props) {
 
     const prefixKey = "filterBy";
     const filterSortBy = [
@@ -14,7 +15,7 @@ export default function Filter(props) {
     ];
 
     const onHandleSortBy = (e) => {
-        props.onHandleFilterChange("filter_sort_by", e.target.value);
+        props.onHandleFilterChange("filter_sort_by", parseInt(e.target.value));
     }
 
     const onHandleSearchBy = (e) => {
@@ -26,7 +27,9 @@ export default function Filter(props) {
             <Form>
                 <div>
                     <AiOutlineCaretDown/>
-                    <Select value={ props.filterSortBy } onChange={ onHandleSortBy }
+                    <Select 
+                        value={ props.filterSortBy } 
+                        onChange={ onHandleSortBy }
                         width="164px">
                         {
                             filterSortBy.map((value, index) => {
@@ -36,11 +39,16 @@ export default function Filter(props) {
                     </Select>
                 </div>
                 <div>
-                    <ButtonEmptySearchInput
-                        onClick={ (e) => { props.onHandleFilterChange("filter_search_by", ""); e.preventDefault(); } }
-                        type="button">
-                        <AiOutlineClose />
-                    </ButtonEmptySearchInput>
+                    {
+                        props.filterSearchBy.length > 0 ?
+                            <ButtonEmptySearchInput
+                                onClick={ (e) => { props.onHandleFilterChange("filter_search_by", ""); e.preventDefault(); } }
+                                type="button">
+                                <AiOutlineClose />
+                            </ButtonEmptySearchInput>
+                            :
+                            null
+                    }
                     <Input 
                         type="text" 
                         name="search" 
@@ -54,3 +62,11 @@ export default function Filter(props) {
         </FilterContainer>
     )
 }
+
+Filter.propTypes = {
+    filterSortBy: PropTypes.number,
+    filterSearchBy: PropTypes.string,
+    onHandleFilterChange: PropTypes.func,
+}
+
+export default Filter;

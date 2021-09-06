@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from "prop-types";
 import { OptionModal, OptionList } from './Option.styled';
 import onClickOutside from "react-onclickoutside";
 
@@ -23,5 +24,13 @@ function Option(props){
 const clickOutsideConfig = {
     handleClickOutside: () => Option.handleClickOutside
 };
+
+Option.propTypes = {
+    id: PropTypes.string,
+    showDetail: PropTypes.bool,
+    showOption: PropTypes.bool,
+    isDeleted: PropTypes.bool,
+    OnHandleUpdateTargetItem: PropTypes.func,
+}
 
 export default onClickOutside(Option, clickOutsideConfig);

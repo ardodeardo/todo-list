@@ -1,9 +1,10 @@
 import React from 'react';
+import PropTypes from "prop-types";
 import { NavigationContainer } from "./Navigation.styled";
 import Filter from './Navigation/Filter';
 import List from './Navigation/List';
 
-export default function Navigation(props) {
+function Navigation(props) {
 
     return (
         <NavigationContainer>
@@ -20,3 +21,14 @@ export default function Navigation(props) {
         </NavigationContainer>
     )
 }
+
+Navigation.propTypes = {
+    itemList: PropTypes.array,
+    onChangeTargetItem: PropTypes.func,
+    onHandleFilterChange: PropTypes.func,
+    filterSortBy: PropTypes.number,
+    filterSearchBy: PropTypes.string
+}
+
+export default Navigation;
+

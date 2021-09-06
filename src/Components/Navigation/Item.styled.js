@@ -5,13 +5,7 @@ import { colorPallete } from "../../Layout/ColorPallete";
 export const ItemWrapper = styled.div`
     border: 1px solid ${ colorPallete.dark_blue };
     border-radius: 8px;
-    /* max-height: 64px; */
-    transition: .5s;
     margin-bottom: 16px;
-
-    /* &.show-detail {
-        max-height: 500px;
-    } */
 `
 
 export const CheckListWrapper = styled.div`
@@ -32,6 +26,7 @@ export const InformationWrapper = styled.div`
     position: relative;
     flex: 1 1 auto;
     padding: 11px 14px;
+    background-color: ${ props => props.completedItem ? colorPallete.shade_gray : "white" };
 `
 
 export const Title = styled.h3`
@@ -90,11 +85,14 @@ export const OptionWrapper  = styled.div`
     display: grid;
     place-content: center;
     padding-right: 12px;
+    background-color: ${ props => props.completedItem ? colorPallete.shade_gray : "white" };
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: ${ props => props.isShowingDetail ? "0" : "8px" };
 `
 
 export const OptionButton = styled.button`
     background-color: transparent;
-    border: 1px dashed white;
+    border: 1px dashed transparent;
     padding: 0 4px;
 
     &:hover {
