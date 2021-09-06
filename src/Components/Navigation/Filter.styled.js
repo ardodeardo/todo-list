@@ -26,3 +26,25 @@ export const Form = styled.form`
         }
     }
 `
+
+export const ButtonEmptySearchInput = styled.button`
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    right: 16px;
+    display: grid;
+    place-content: center;
+    z-index: 1;
+    background-color: transparent;
+    border: 1px dashed white;
+    padding: 4px;
+
+    &:hover {
+        border-color: ${ colorPallete.dark_blue };
+    }
+
+    svg {
+        font-size: 12px;
+        color: ${ colorPallete.red }
+    }
+`

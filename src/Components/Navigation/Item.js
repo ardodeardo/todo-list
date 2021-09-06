@@ -1,12 +1,13 @@
 import React from 'react';
-import { AiFillCheckCircle, AiOutlineClose } from "react-icons/ai";
+import { AiFillCheckCircle } from "react-icons/ai";
 import { BsThreeDots } from "react-icons/bs";
+import Option from './Item/Option';
+import Body from './Item/Body';
 import { 
     ItemWrapper, CheckListWrapper, ItemHeader, 
-    ItemBody, Button, InformationWrapper, Title, 
+    Button, InformationWrapper, Title, 
     DateTime, PriorityType, OptionWrapper, OptionButton, 
-    DateWrapper, Description, CloseDetailButton,
-    OptionModal, OptionList } from './Item.styled';
+    DateWrapper } from './Item.styled';
 
 
 export default function Item(props) {
@@ -38,16 +39,13 @@ export default function Item(props) {
     const renderOption = () => {
         if(props.showOption) {
             return (
-                <OptionModal>
-                    <OptionList>
-                        <li>
-                            <button onClick={ () => handleUpdateTargetItem(props.id, "show_detail", props.showDetail) }>Detail</button>
-                        </li>
-                        <li>
-                            <button onClick={ () => handleUpdateTargetItem(props.id, "is_deleted", props.isDeleted) }>Delete</button>
-                        </li>
-                    </OptionList>
-                </OptionModal>
+                <Option
+                    id={ props.id }
+                    showDetail={ props.showDetail }
+                    showOption={ props.showOption }
+                    isDeleted={ props.isDeleted }
+                    OnHandleUpdateTargetItem={ handleUpdateTargetItem }
+                    ></Option>
             )
         }
     }
@@ -55,14 +53,11 @@ export default function Item(props) {
     const renderDetail = () => {
         if(props.showDetail) {
             return (
-                <ItemBody>
-                    <Description>
-                        { props.description.length > 0 ? props.description : "No detail for this task" }
-                    </Description>
-                    <CloseDetailButton onClick={ () => handleUpdateTargetItem(props.id, "show_detail", props.showDetail) }>
-                        <AiOutlineClose />
-                    </CloseDetailButton>
-                </ItemBody>
+                <Body
+                    id={ props.id }
+                    description={ props.description }
+                    showDetail={ props.showDetail }
+                    OnHandleUpdateTargetItem={ handleUpdateTargetItem }></Body>
             )
         }
     }

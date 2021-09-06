@@ -5,12 +5,14 @@ import Container from "./Layout/Container.styled";
 import Form from "./Components/Form";
 import Navigation from "./Components/Navigation";
 import { v4 as uuidv4 } from "uuid";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 class App extends Component {
     constructor(props) {
         super(props);
 
-        const form = {
+        const itemMainStructure = {
             id: "",
             title: "",
             priority: 2,
@@ -20,6 +22,10 @@ class App extends Component {
             is_deleted: false,
             show_detail: false,
             show_option: false,
+        }
+
+        const form = {
+            ...itemMainStructure,
             form_submit_disabled: true,
         }
 
@@ -35,14 +41,29 @@ class App extends Component {
         };
 
         this.handleFormChange = this.handleFormChange.bind(this);
-        this.handleItemChange = this.handleItemChange.bind(this);
+        this.handleUpdateItem = this.handleUpdateItem.bind(this);
         this.handleResetForm = this.handleResetForm.bind(this);
         this.formValidation = this.formValidation.bind(this);
         this.handleFilterChange = this.handleFilterChange.bind(this);
     }
 
+    componentDidMount() {
+        // console.log("component did mount");
+        const isLocalStorageAvailable = window.localStorage.length > 0 ? JSON.parse(window.localStorage.getItem("items")) : false;
+
+        if(isLocalStorageAvailable) {
+            const itemList = isLocalStorageAvailable.map(item => {
+                let formattedObj = {...item}
+                formattedObj.due_date = new Date(item.due_date)
+                return formattedObj;
+            });
+            this.setState({ items: itemList });
+        }
+    }
+
     componentDidUpdate() {
-        console.log("component did update");
+        // console.log("component did update");
+        window.localStorage.setItem("items", JSON.stringify(this.state.items));
     }
 
     formValidation() {
@@ -75,7 +96,6 @@ class App extends Component {
     }
 
     handleInsertNewItem = (e) => {
-
         if(!this.state.form_submit_disabled){
             let newItem = {
                 id: uuidv4(),
@@ -94,7 +114,7 @@ class App extends Component {
                     items: prevState.items.concat(newItem),
                 };
             });
-    
+            this.handleNotification("insert", "Task added")
             e.preventDefault();
         }
     };
@@ -113,14 +133,45 @@ class App extends Component {
         this.setState({ [item]: value });
     }
 
-    handleItemChange(id, itemObject, value) {
+    handleUpdateItem(id, itemObject, value) {
         const allItems = [...this.state.items];
         const findById = allItems.filter((item) => item.id === id);
         const getArrayIndex = allItems.findIndex((item) => item.id === id);
         const targetItem = { ...findById[0] };
         targetItem[itemObject] = value;
         allItems[getArrayIndex] = targetItem;
-        this.setState({ items: allItems });
+
+        this.setState({ items: allItems }, () => {
+            if(itemObject === "is_deleted" && value === true) {
+                this.handleNotification("remove", "Task removed");
+            } else if(itemObject === "is_complete" && value === true) {
+                this.handleNotification("complete", "Awesome! Task is complete");
+            }
+        });
+    }
+
+    handleNotification(type, text) {
+        switch (type) {
+            case "insert":
+                toast.success(text, {
+                    icon: "🚀",
+                    theme: "colored"
+                });
+                break;
+            case "remove":
+                toast.error(text, {
+                    theme: "colored"
+                });
+                break;
+            case "complete":
+                toast(text, {
+                    icon: "🦄",
+                    theme: "light"
+                });
+                break;
+            default:
+                break;
+        }
     }
 
     render() {
@@ -140,6 +191,10 @@ class App extends Component {
         return (
             <Todo>
                 <GlobalStyle />
+                <ToastContainer 
+                    position="top-right"
+                    autoClose={3000}
+                    hideProgressBar={true} />
                 <Container>
                     <Form
                         formTitle={title}
@@ -157,7 +212,7 @@ class App extends Component {
                     ></Form>
                     <Navigation
                         itemList={items}
-                        onChangeTargetItem={this.handleItemChange}
+                        onChangeTargetItem={this.handleUpdateItem}
                         onHandleFilterChange={this.handleFilterChange}
                         filterSortBy={ filter_sort_by }
                         filterSearchBy={ filter_search_by }

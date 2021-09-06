@@ -1,8 +1,7 @@
 import React from 'react';
 import { Select, Input } from "../Form.styled";
-import { FilterContainer, Form } from './Filter.styled';
-import { AiOutlineCaretDown } from "react-icons/ai";
-
+import { FilterContainer, Form, ButtonEmptySearchInput } from './Filter.styled';
+import { AiOutlineCaretDown, AiOutlineClose } from "react-icons/ai";
 
 
 export default function Filter(props) {
@@ -37,6 +36,11 @@ export default function Filter(props) {
                     </Select>
                 </div>
                 <div>
+                    <ButtonEmptySearchInput
+                        onClick={ (e) => { props.onHandleFilterChange("filter_search_by", ""); e.preventDefault(); } }
+                        type="button">
+                        <AiOutlineClose />
+                    </ButtonEmptySearchInput>
                     <Input 
                         type="text" 
                         name="search" 

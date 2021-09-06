@@ -1,7 +1,5 @@
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 import { AiOutlineCaretDown, AiFillCalendar } from "react-icons/ai";
 import { 
     FormContainer, Container, Logo, 
@@ -13,10 +11,10 @@ export default function Form(props) {
 
     const prefixKey = "priority";
     const priority = [
-            [1,"Low"], 
-            [2,"Medium"], 
-            [3,"High"]
-    ];
+            [1, "Low"], 
+            [2, "Medium"], 
+            [3 ,"High"]
+        ];
 
     const handleTitleChange = (e) => {
         let title = e.target.value;
@@ -40,21 +38,12 @@ export default function Form(props) {
     }
 
     const handleSubmit = (e) => {
-        if(true) {
-            props.onAddItem(e);
-            toast.success("Todo item added!", {
-                theme: "colored"
-              });
-        }
+        props.onAddItem(e);
         e.preventDefault();
     }
 
     return (
-        <FormContainer onSubmit={ handleSubmit }> 
-            <ToastContainer 
-                position="bottom-right"
-                autoClose={3000}
-                hideProgressBar={false} />
+        <FormContainer onSubmit={ handleSubmit }>
             <Container>
                 <Logo><span>Todo</span>-list</Logo>
                 <div>

@@ -27,6 +27,7 @@ export const Logo = styled.div`
 
 const formGeneric = `
     font-size: 14px;
+    background-color: white;
     color: ${ colorPallete.light_gray };
     border: none;
     border-radius: 8px;
