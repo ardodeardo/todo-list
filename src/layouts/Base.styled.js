@@ -4,7 +4,6 @@ import { reset } from 'styled-reset';
 
 const GlobalStyle = createGlobalStyle`
     @import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;700&display=swap');
-    /* ${ normalize } */
     ${ reset }
 
     :root {
