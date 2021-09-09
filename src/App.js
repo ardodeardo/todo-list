@@ -206,7 +206,8 @@ class App extends Component {
                     autoClose={3000}
                     hideProgressBar={true} />
                 <RequestShowOnDevice>
-                    <h1>Please view on desktop :)</h1>
+                    <img src="http://pixelartmaker-data-78746291193.nyc3.digitaloceanspaces.com/image/96a034beedb086d.png" alt="computer pixel art"/>
+                    <h1>Please preview on desktop :)</h1>
                 </RequestShowOnDevice>
                 <Container>
                     <Form
