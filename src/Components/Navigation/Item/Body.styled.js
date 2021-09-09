@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { colorPallete } from "../../../Layout/ColorPallete";
+import { colorPallete } from "../../../variables/ColorPallete";
 
 export const ItemBody = styled.div`
     position: relative;

@@ -37,6 +37,24 @@ function Item(props) {
         props.onChangeTargetItem(id, itemObject, value);
     }
 
+    const formatDate = (date) => {
+        const objDate = new Date(date);
+        const monthInYear= [
+            "January", "February", "March", "April", "May", "June",
+            "July", "August", "September", "October", "November", "December"
+        ];
+        
+        const leadingZeroMonth = objDate.getMonth() < 10 ? `0${ objDate.getMonth() }` : objDate.getMonth();
+        const leadingZeroDate = objDate.getDate() < 10 ? `0${ objDate.getDate() }` : objDate.getDate();
+
+        const arr = [
+            `${ objDate.getFullYear() }-${ leadingZeroMonth }-${ leadingZeroDate }`,
+            `${ objDate.getDate() } ${ monthInYear[objDate.getMonth() + 1].substring(0, 3) } ${ objDate.getFullYear() }`
+        ];
+
+        return arr;
+    }
+
     const renderOption = () => {
         if(props.showOption) {
             return (
@@ -78,7 +96,7 @@ function Item(props) {
                     <Title>{ props.title }</Title>
                     <DateWrapper>
                         <DateTime 
-                            dateTime={ props.dueDate }>{ props.dueDate }</DateTime>
+                            dateTime={ props.dueDate }>{ formatDate(props.dueDate)[1] }</DateTime>
                         <PriorityType 
                             color={ priorityLevel[props.priority].color }>{ priorityLevel[props.priority].text }</PriorityType>
                     </DateWrapper>    

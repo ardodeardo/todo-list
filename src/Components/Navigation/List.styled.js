@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { colorPallete } from "../../Layout/ColorPallete";
+import { colorPallete } from "../../variables/ColorPallete";
 
 const ListContainer = styled.div`
     flex: 1 1 auto;

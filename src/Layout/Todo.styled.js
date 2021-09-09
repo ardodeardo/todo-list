@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { colorPallete } from "./ColorPallete";
+import { colorPallete } from "../variables/ColorPallete";
 
 const Todo = styled.main`
     position: relative;
@@ -8,8 +8,9 @@ const Todo = styled.main`
     /* min-height: 768px; */
     height: 100vh;
 
-    display: grid;
-    place-items: center;  
+    display: flex;
+    justify-content: center;
+    align-items: center;
 
     background-color: ${ colorPallete.purple };
 `

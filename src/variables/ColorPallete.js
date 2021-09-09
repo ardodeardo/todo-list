@@ -1,4 +1,4 @@
-export const colorPallete = {
+const colorPallete = {
     yellow: '#FFD717',
     blue: '#0D63A5',
     dark_blue: '#083358',
@@ -7,4 +7,6 @@ export const colorPallete = {
     light_gray: '#959595',
     shade_gray: '#f2f2f2',
     red: '#ff1717'
-};
+}
+
+export { colorPallete }

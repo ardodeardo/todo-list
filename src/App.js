@@ -1,9 +1,10 @@
 import React, { Component } from "react";
-import GlobalStyle from "./Layout/Base.styled";
-import Todo from "./Layout/Todo.styled";
-import Container from "./Layout/Container.styled";
-import Form from "./Components/Form";
-import Navigation from "./Components/Navigation";
+import GlobalStyle from "./layout/Base.styled";
+import Todo from "./layout/Todo.styled";
+import Container from "./layout/Container.styled";
+import { RequestShowOnDevice } from "./components/RequestShowOnDevice.styled";
+import Form from "./components/Form";
+import Navigation from "./components/Navigation";
 import { v4 as uuidv4 } from "uuid";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -204,6 +205,9 @@ class App extends Component {
                     position="top-right"
                     autoClose={3000}
                     hideProgressBar={true} />
+                <RequestShowOnDevice>
+                    <h1>Please view on desktop :)</h1>
+                </RequestShowOnDevice>
                 <Container>
                     <Form
                         formTitle={title}
