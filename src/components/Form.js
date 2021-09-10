@@ -34,8 +34,6 @@ function Form(props) {
         props.onFormChange("description", e.target.value);
     }
 
-
-
     const handleSubmit = (e) => {
         props.onAddItem(e);
         e.preventDefault();
@@ -70,7 +68,6 @@ function Form(props) {
                             <div>
                                 <AiFillCalendar/>
                                 <DatePicker
-                                    // dateFormat="dd-MM-yyyy"
                                     selected={ props.formDueDate } 
                                     onChange={ handleDueDateChange } />
                             </div>

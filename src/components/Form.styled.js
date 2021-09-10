@@ -91,6 +91,7 @@ export const ButtonWrapper = styled.div`
     grid-template-columns: repeat(2,1fr);
     margin-top: 59px;
 `
+
 export const Button = styled.button.attrs(props => ({
     disabled: props.isDisabled
 }))`

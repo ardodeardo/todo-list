@@ -7,7 +7,7 @@ export const OptionModal = styled.div`
     left: -27px;
     background-color: white;
     z-index: 2;
-    border: 1px solid ${ colorPallete.light_gray };
+    border: 1px solid ${ colorPallete.soft_gray };
     border-radius: 4px;
     overflow: hidden;
 `

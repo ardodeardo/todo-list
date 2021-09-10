@@ -76,6 +76,7 @@ function Item(props) {
                     id={ props.id }
                     description={ props.description }
                     showDetail={ props.showDetail }
+                    isComplete={ props.isComplete }
                     OnHandleUpdateTargetItem={ handleUpdateTargetItem }
                     ></Body>
             )
@@ -83,16 +84,18 @@ function Item(props) {
     }
 
     return (
-        <ItemWrapper>
+        <ItemWrapper 
+            completedItem={ props.isComplete }>
             <ItemHeader>
-                <CheckListWrapper>
+                <CheckListWrapper completedItem={ props.isComplete }>
                     <Button 
                         status={ props.isComplete } 
                         onClick={ () => handleUpdateTargetItem(props.id, "is_complete", props.isComplete) }>
                         <AiFillCheckCircle />
                     </Button>
                 </CheckListWrapper>
-                <InformationWrapper completedItem={ props.isComplete }>
+                <InformationWrapper 
+                    completedItem={ props.isComplete }>
                     <Title>{ props.title }</Title>
                     <DateWrapper>
                         <DateTime 

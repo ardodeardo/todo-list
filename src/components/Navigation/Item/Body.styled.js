@@ -5,7 +5,7 @@ export const ItemBody = styled.div`
     position: relative;
     border-top: 1px;
     border-style: solid;
-    border-color: ${ colorPallete.dark_blue };
+    border-color: ${ props => props.completedItem ? colorPallete.dark_gray : colorPallete.blue };
     padding: .1px;
 `
 

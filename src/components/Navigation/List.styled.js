@@ -1,14 +1,14 @@
 import styled from "styled-components";
 import { colorPallete } from "../../variables/ColorPallete";
 
-const ListContainer = styled.div`
+export const ListContainer = styled.div`
     flex: 1 1 auto;
     padding: 32px;
     height: auto;
     overflow-y: auto;
 `
 
-const ArchiveTitle = styled.h2`
+export const ArchiveTitle = styled.h2`
     position: relative;
     font-size: 16px;
     color: ${ colorPallete.dark_blue };
@@ -28,7 +28,7 @@ const ArchiveTitle = styled.h2`
     }
 `
 
-const Empty = styled.div`
+export const Empty = styled.div`
     display: grid;
     place-content: center;
     height: 100%;
@@ -39,11 +39,9 @@ const Empty = styled.div`
     }
 `
 
-const FeedbackImage = styled.img`
+export const FeedbackImage = styled.img`
     width: 70%;
     height: auto;
     margin: 0 auto;
     margin-bottom: 42px;
 `
-
-export { ListContainer, ArchiveTitle, Empty, FeedbackImage }

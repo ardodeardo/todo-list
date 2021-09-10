@@ -3,7 +3,7 @@ import { colorPallete } from "../../variables/ColorPallete";
 
 
 export const ItemWrapper = styled.div`
-    border: 1px solid ${ colorPallete.dark_blue };
+    border: 1px solid ${ props => props.completedItem ? colorPallete.dark_gray : colorPallete.blue };
     border-radius: 8px;
     margin-bottom: 16px;
 `
@@ -13,7 +13,7 @@ export const CheckListWrapper = styled.div`
     width: 48px;
     display: grid;
     place-content: center;
-    border-right: 1px solid ${ colorPallete.dark_blue };
+    border-right: 1px solid ${ props => props.completedItem ? colorPallete.dark_gray : colorPallete.blue };
 `
 
 export const ItemHeader = styled.div`

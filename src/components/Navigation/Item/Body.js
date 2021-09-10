@@ -6,7 +6,7 @@ import { ItemBody, Description, CloseDetailButton } from './Body.styled';
 function Body(props) {
 
     return (
-        <ItemBody>
+        <ItemBody completedItem={ props.isComplete }>
             <Description>
                 { props.description.length > 0 ? props.description : "No detail for this task" }
             </Description>
@@ -21,6 +21,7 @@ Body.propTypes = {
     id: PropTypes.string,
     description: PropTypes.string,
     showDetail: PropTypes.bool,
+    isComplete: PropTypes.bool,
     OnHandleUpdateTargetItem: PropTypes.func
 }
 
