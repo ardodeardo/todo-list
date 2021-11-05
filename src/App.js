@@ -4,7 +4,15 @@ import Todo from "./layout/Todo.styled";
 import Container from "./layout/Container.styled";
 import { RequestShowOnDevice } from "./components/RequestShowOnDevice.styled";
 import Form from "./components/Form";
-import Navigation from "./components/Navigation";
+import Filter from './components/Navigation/Filter';
+import { NavigationContainer } from "./components/Navigation.styled";
+
+import Item from './components/Navigation/Item';
+import { 
+    ListContainer,
+    ArchiveTitle, Empty, FeedbackImage } from './components/List.styled';
+
+import { debounce } from "lodash";
 import { v4 as uuidv4 } from "uuid";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -12,6 +20,7 @@ import 'react-toastify/dist/ReactToastify.css';
 class App extends Component {
     constructor(props) {
         super(props);
+        this.popup = React.createRef();
 
         const itemMainStructure = {
             id: "",
@@ -32,7 +41,8 @@ class App extends Component {
 
         const filter = {
             filter_sort_by: 0,
-            filter_search_by: ""
+            filter_search_by: "",
+            debounce_filter_search_by: ""
         }
 
         this.state = {
@@ -46,6 +56,7 @@ class App extends Component {
         this.handleResetForm = this.handleResetForm.bind(this);
         this.formValidation = this.formValidation.bind(this);
         this.handleFilterChange = this.handleFilterChange.bind(this);
+        this.setFilterSearchDebounce = debounce(this.setFilterSearchDebounce.bind(this), 300);
     }
 
     componentDidMount() {
@@ -62,9 +73,10 @@ class App extends Component {
         }
     }
 
-    componentDidUpdate() {
-        // console.log("component did update");
-        window.localStorage.setItem("items", JSON.stringify(this.state.items));
+    componentDidUpdate(prevProps, prevState, sbnapShot) {
+        if (prevState.items !== this.state.items) {
+            window.localStorage.setItem("items", JSON.stringify(this.state.items));
+        }
     }
 
     formValidation() {
@@ -96,6 +108,16 @@ class App extends Component {
         });
     }
 
+    handleResetForm() {
+        this.setState({
+            title: "",
+            priority: 2,
+            due_date: new Date(),
+            description: "",
+            form_submit_disabled: true
+        });
+    }
+
     handleInsertNewItem = (e) => {
         if(!this.state.form_submit_disabled){
             let newItem = {
@@ -112,26 +134,27 @@ class App extends Component {
     
             this.setState((prevState) => {
                 return {
-                    items: prevState.items.concat(newItem),
+                    items: prevState.items.concat(newItem)
                 };
+            }, () => {
+                this.handleResetForm();
+                this.handleNotification("insert", "Task added");
             });
-            this.handleNotification("insert", "Task added")
+            
             e.preventDefault();
         }
     };
 
-    handleResetForm() {
-        this.setState({
-            title: "",
-            priority: 2,
-            due_date: new Date(),
-            description: "",
-            form_submit_disabled: true
-        });
+    setFilterSearchDebounce() { 
+        this.setState({ debounce_filter_search_by: this.state.filter_search_by }); 
     }
 
-    handleFilterChange(item, value) {
-        this.setState({ [item]: value });
+    handleFilterChange (item, value) {
+        this.setState({ [item]: value }, () => {
+            if (item === 'filter_search_by') { 
+                this.setFilterSearchDebounce(value);
+            }
+        });
     }
 
     handleUpdateItem(id, itemObject, value) {
@@ -183,7 +206,138 @@ class App extends Component {
                 break;
         }
     }
+    
+    handleEmptyOrNotFoundItem = ({ img, description }) => {
+        return (
+            <Empty>
+                <FeedbackImage 
+                    src={ img }></FeedbackImage>
+                    <p>{ description }</p>
+            </Empty> 
+        )
+    }
 
+    getListByFilter(isComplete) {
+        const { items, filter_sort_by, debounce_filter_search_by } = this.state; 
+        
+        let getList = 
+            debounce_filter_search_by.length > 2 
+            ?
+            items.filter(obj => obj.is_complete === isComplete && obj.is_deleted === false && obj.title.toLowerCase().indexOf(debounce_filter_search_by.toLowerCase()) >= 0)
+            :
+            items.filter(obj => obj.is_complete === isComplete && obj.is_deleted === false);
+
+        // check by priority
+        getList =
+            filter_sort_by === 3 
+            ? 
+            getList.sort((a, b) => b.priority - a.priority || a.due_date - b.due_date)
+            : 
+            getList.sort((a, b) => a.priority - b.priority || a.due_date - b.due_date);
+
+        return getList;
+    }
+
+    renderListItem() {
+        const { items, debounce_filter_search_by } = this.state;
+        const emptyOrNotFoundTemplate = {
+            empty: {
+                img: "https://lelogama.go-jek.com/prime/upload/image/Creative_Labs_wins_Media_Agency_of_the_Year.svg",
+                description: "Pertukangan belum ada Proyek lagi!"
+            },
+            notFound: { 
+                img: "https://lelogama.go-jek.com/cache/c0/ef/c0efd340479bded453731c7ef1b2d8f0.webp",
+                description: "Ga nemu bro yang dicari!"
+            }
+        }
+
+        if (items.length > 0) {
+            let inProgressItems = this.getListByFilter(false);
+            let completedItems = this.getListByFilter(true);
+
+            const inProgressFound = inProgressItems.length > 0 ? true : false;
+            const archiveFound = completedItems.length > 0 ? true : false;
+
+            let inProgressTemp;
+            let completedTemp;
+
+            if(inProgressItems.length > 0) {
+                inProgressTemp = 
+                    <div key="inprogresslistcontainer">
+                    {
+                        inProgressItems.map(item => {
+                            const dateFormat = item.due_date.toDateString();
+
+                            return <Item
+                                key={ item.id }
+                                id={ item.id }
+                                title={ item.title }
+                                priority={ item.priority }
+                                dueDate={ dateFormat }
+                                description={ item.description }
+                                isComplete={ item.is_complete }
+                                showOption={ item.show_option }
+                                showDetail={ item.show_detail }
+                                isDeleted={ item.is_deleted }
+                                onChangeTargetItem={ this.handleUpdateItem }
+                                ></Item>
+                        })
+                    }
+                    </div>
+            } 
+
+            if(completedItems.length > 0) {
+                completedTemp = 
+                    <div key="archivelistcontainer">
+                        <ArchiveTitle>Task Archive</ArchiveTitle>
+                        {
+                            completedItems.map(item => {
+                                const dateFormat = item.due_date.toDateString();
+
+                                return <Item
+                                    key={ item.id }
+                                    id={ item.id }
+                                    title={ item.title }
+                                    priority={ item.priority }
+                                    dueDate={ dateFormat }
+                                    description={ item.description }
+                                    isComplete={ item.is_complete }
+                                    showOption={ item.show_option }
+                                    showDetail={ item.show_detail }
+                                    isDeleted={ item.is_deleted }
+                                    onChangeTargetItem={ this.handleUpdateItem }
+                                    ></Item>
+                            })
+                        }
+                    </div>
+            }
+
+            let finalResult;
+            // empty by filter or just empty
+            const isEmptyOrNotFound = debounce_filter_search_by.length > 2 ? {...emptyOrNotFoundTemplate.notFound} : {...emptyOrNotFoundTemplate.empty}
+
+            if (!inProgressFound && !archiveFound) {
+                finalResult = this.handleEmptyOrNotFoundItem(isEmptyOrNotFound);
+            }
+            else if (!inProgressFound){
+                finalResult = [
+                    this.handleEmptyOrNotFoundItem(isEmptyOrNotFound),
+                    inProgressTemp,
+                    completedTemp
+                ];
+            }
+            else {
+                finalResult = [inProgressTemp,completedTemp];
+            }
+
+            return finalResult;
+            
+        } else {
+            // first load
+            return this.handleEmptyOrNotFoundItem({...emptyOrNotFoundTemplate.empty});
+        }
+    }
+    
     render() {
         const {
             title,
@@ -224,13 +378,15 @@ class App extends Component {
                         onAddItem={this.handleInsertNewItem}
                         formSubmitDisabled={form_submit_disabled}
                     ></Form>
-                    <Navigation
-                        itemList={items}
-                        onChangeTargetItem={this.handleUpdateItem}
-                        onHandleFilterChange={this.handleFilterChange}
-                        filterSortBy={ filter_sort_by }
-                        filterSearchBy={ filter_search_by }
-                    ></Navigation>
+                    <NavigationContainer>
+                        <Filter 
+                            filterSortBy={ filter_sort_by }
+                            filterSearchBy={ filter_search_by }
+                            onHandleFilterChange={this.handleFilterChange}></Filter>
+                        <ListContainer>
+                            { this.renderListItem() }
+                        </ListContainer>
+                    </NavigationContainer>
                 </Container>
             </Todo>
         );
