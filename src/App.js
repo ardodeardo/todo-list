@@ -4,13 +4,13 @@ import Todo from "./layout/Todo.styled";
 import Container from "./layout/Container.styled";
 import { RequestShowOnDevice } from "./components/RequestShowOnDevice.styled";
 import Form from "./components/Form";
-import Filter from './components/Navigation/Filter';
+import Filter from './components/control/Filter';
 import { NavigationContainer } from "./components/Navigation.styled";
 
-import Item from './components/Navigation/Item';
+import Item from './components/item/Item';
 import { 
-    ListContainer,
-    ArchiveTitle, Empty, FeedbackImage } from './components/List.styled';
+    ListContainer, ArchiveTitle, 
+    Empty, FeedbackImage } from './components/List.styled';
 
 import { debounce } from "lodash";
 import { v4 as uuidv4 } from "uuid";
@@ -20,7 +20,6 @@ import 'react-toastify/dist/ReactToastify.css';
 class App extends Component {
     constructor(props) {
         super(props);
-        this.popup = React.createRef();
 
         const itemMainStructure = {
             id: "",
@@ -60,7 +59,7 @@ class App extends Component {
     }
 
     componentDidMount() {
-        // console.log("component did mount");
+
         const isLocalStorageAvailable = window.localStorage.length > 0 ? JSON.parse(window.localStorage.getItem("items")) : false;
 
         if(isLocalStorageAvailable) {
@@ -380,8 +379,8 @@ class App extends Component {
                     ></Form>
                     <NavigationContainer>
                         <Filter 
-                            filterSortBy={ filter_sort_by }
-                            filterSearchBy={ filter_search_by }
+                            filterSortBy={filter_sort_by}
+                            filterSearchBy={filter_search_by}
                             onHandleFilterChange={this.handleFilterChange}></Filter>
                         <ListContainer>
                             { this.renderListItem() }

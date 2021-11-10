@@ -2,8 +2,8 @@ import React from 'react';
 import PropTypes from "prop-types";
 import { AiFillCheckCircle } from "react-icons/ai";
 import { BsThreeDots } from "react-icons/bs";
-import Option from './Item/Option';
-import Body from './Item/Body';
+import Option from './Option';
+import Body from './Body';
 import { 
     ItemWrapper, CheckListWrapper, ItemHeader, 
     Button, InformationWrapper, Title, 

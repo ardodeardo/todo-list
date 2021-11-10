@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { colorPallete } from "../../../variables/ColorPallete";
+import { colorPallete } from "../../variables/ColorPallete";
 
 export const OptionModal = styled.div`
     position: absolute;
