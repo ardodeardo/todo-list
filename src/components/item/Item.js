@@ -38,7 +38,6 @@ class Item extends Component {
 
     handleClickOutside(event) {
         if (this.ref.current && !this.ref.current.contains(event.target)) {
-            console.log('close please')
             this.handleUpdateTargetItem(this.props.id, "show_option", this.props.showOption);
         }
     }
