@@ -1,19 +1,22 @@
 import React, { Component } from "react";
+
 import GlobalStyle from "./layout/Base.styled";
 import Todo from "./layout/Todo.styled";
 import Container from "./layout/Container.styled";
 import { RequestShowOnDevice } from "./components/RequestShowOnDevice.styled";
+import { NavigationContainer } from "./components/Navigation.styled";
+
 import Form from "./components/Form";
 import Filter from './components/control/Filter';
-import { NavigationContainer } from "./components/Navigation.styled";
 
 import Item from './components/item/Item';
 import { 
     ListContainer, ArchiveTitle, 
-    Empty, FeedbackImage } from './components/List.styled';
+    Empty, FeedbackImage 
+} from './components/List.styled';
 
-import { debounce } from "lodash";
 import { v4 as uuidv4 } from "uuid";
+import { debounce } from "lodash";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -50,16 +53,27 @@ class App extends Component {
             items: [],
         };
 
+        this.retrieveDataItems = this.retrieveDataItems.bind(this);
         this.handleFormChange = this.handleFormChange.bind(this);
         this.handleUpdateItem = this.handleUpdateItem.bind(this);
         this.handleResetForm = this.handleResetForm.bind(this);
         this.formValidation = this.formValidation.bind(this);
         this.handleFilterChange = this.handleFilterChange.bind(this);
         this.setFilterSearchDebounce = debounce(this.setFilterSearchDebounce.bind(this), 300);
+        this.renderListItem = this.renderListItem.bind(this);
     }
 
     componentDidMount() {
+        this.retrieveDataItems();
+    }
 
+    componentDidUpdate(prevProps, prevState, sbnapShot) {
+        if (prevState.items !== this.state.items) {
+            window.localStorage.setItem("items", JSON.stringify(this.state.items));
+        }
+    }
+
+    retrieveDataItems() {
         const isLocalStorageAvailable = window.localStorage.length > 0 ? JSON.parse(window.localStorage.getItem("items")) : false;
 
         if(isLocalStorageAvailable) {
@@ -72,12 +86,6 @@ class App extends Component {
         }
     }
 
-    componentDidUpdate(prevProps, prevState, sbnapShot) {
-        if (prevState.items !== this.state.items) {
-            window.localStorage.setItem("items", JSON.stringify(this.state.items));
-        }
-    }
-
     formValidation() {
         let formNeedToDisabled = true;
         const { title, description } = this.state;
@@ -86,15 +94,15 @@ class App extends Component {
             description: false
         }
 
-        if(title.length > 0 && title.length <= 100) {
+        if (title.length > 0 && title.length <= 100) {
             validate.title = true;
         }
 
-        if(description.length > 0 && description.length <= 255) {
+        if (description.length > 0 && description.length <= 255) {
             validate.description = true;
         }
 
-        if(validate.title && validate.description) {
+        if (validate.title && validate.description) {
             formNeedToDisabled = false;
         }
 
@@ -118,7 +126,7 @@ class App extends Component {
     }
 
     handleInsertNewItem = (e) => {
-        if(!this.state.form_submit_disabled){
+        if (!this.state.form_submit_disabled){
             let newItem = {
                 id: uuidv4(),
                 title: this.state.title,
@@ -163,7 +171,7 @@ class App extends Component {
         const targetItem = { ...findById[0] };
         targetItem[itemObject] = value;
 
-        if(itemObject === "show_detail" || itemObject === "is_deleted") {
+        if (itemObject === "show_detail" || itemObject === "is_deleted") {
             // auto close the option card
             targetItem.show_option = false;
         } else if (itemObject === "is_complete") {
@@ -174,7 +182,7 @@ class App extends Component {
         allItems[getArrayIndex] = targetItem;
 
         this.setState({ items: allItems }, () => {
-            if(itemObject === "is_deleted" && value === true) {
+            if (itemObject === "is_deleted" && value === true) {
                 this.handleNotification("remove", "Task removed");
             } else if(itemObject === "is_complete" && value === true) {
                 this.handleNotification("complete", "Awesome! Task is complete");
@@ -260,11 +268,11 @@ class App extends Component {
             let inProgressTemp;
             let completedTemp;
 
-            if(inProgressItems.length > 0) {
+            if (inProgressItems.length > 0) {
                 inProgressTemp = 
                     <div key="inprogresslistcontainer">
                     {
-                        inProgressItems.map(item => {
+                        inProgressItems.map((item, idx) => {
                             const dateFormat = item.due_date.toDateString();
 
                             return <Item
@@ -285,7 +293,7 @@ class App extends Component {
                     </div>
             } 
 
-            if(completedItems.length > 0) {
+            if (completedItems.length > 0) {
                 completedTemp = 
                     <div key="archivelistcontainer">
                         <ArchiveTitle>Task Archive</ArchiveTitle>
@@ -312,8 +320,10 @@ class App extends Component {
             }
 
             let finalResult;
+            
             // empty by filter or just empty
-            const isEmptyOrNotFound = debounce_filter_search_by.length > 2 ? {...emptyOrNotFoundTemplate.notFound} : {...emptyOrNotFoundTemplate.empty}
+            const isEmptyOrNotFound = debounce_filter_search_by.length > 2 ? 
+                {...emptyOrNotFoundTemplate.notFound} : {...emptyOrNotFoundTemplate.empty}
 
             if (!inProgressFound && !archiveFound) {
                 finalResult = this.handleEmptyOrNotFoundItem(isEmptyOrNotFound);

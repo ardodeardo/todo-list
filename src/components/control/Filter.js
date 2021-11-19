@@ -1,17 +1,17 @@
 import React from 'react';
 import PropTypes from "prop-types";
+
 import { Select, Input } from "../Form.styled";
 import { FilterContainer, Form, ButtonEmptySearchInput } from './Filter.styled';
+
 import { AiOutlineCaretDown, AiOutlineClose } from "react-icons/ai";
 
-
 function Filter(props) {
-
     const prefixKey = "filterBy";
     const filterSortBy = [
-            [0,"Sort By"],
-            [1,"Low"],
-            [3,"High"]
+        [0, "Sort By"],
+        [1, "Low"],
+        [3, "High"]
     ];
 
     const onHandleSortBy = (e) => {
